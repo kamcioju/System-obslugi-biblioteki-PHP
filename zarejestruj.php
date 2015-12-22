@@ -19,31 +19,102 @@
     
     var XMLHttp = getXMLHttp();
 
-    function sprlog(g){
+    function validatelogin(field){
     XMLHttp.open("POST", "sprawdz_lohin.php");
 XMLHttp.onreadystatechange = handlerFunction;
 XMLHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-XMLHttp.send("login="+g);
+XMLHttp.send("login="+field);
     
-    }
+   
 function handlerFunction() {
   if (XMLHttp.readyState == 4) {
       if(XMLHttp.responseText.length>0)
           //if(XMLHttp.responseText.indexOf("istnieje")>-1  )
-   { 
+      { 
        $("input[name=login]").next().show(); 
        $("input[name=login]").next().html("Login: "+XMLHttp.responseText+" istnieje!");}
-      else {
+       else if(field.length>0) 
+           {
+       if(field.length<5)
+          { 
+       $("input[name=login]").next().show(); 
+       $("input[name=login]").next().html("Nazwa użytkownika musi składać się z co najmniej 5 znaków!");}
+      else if(/[^a-zA-Z0-9_-]/.test(field))
+           { 
+       $("input[name=login]").next().show(); 
+       $("input[name=login]").next().html("Niewłasciwe znaki w nazwie użytkownika!");}
+               else {
           $("input[name=login]").next().hide();
       }
+               }
+      
+      
   }
 }
-
+ }
+function validatepass(field)
+    {
+              if(field.length>0)
+                  {
+                if(field.length<6)
+                    {
+                $("input[name=haslo]").next().show(); 
+                $("input[name=haslo]").next().html("hasło musi składać się z conajmniej 6 znaków.");              
+                } 
+                else if(!/[a-z]/.test(field)||
+                        !/[A-Z]/.test(field)||
+                        !/[0-9]/.test(field))
+                    {
+                $("input[name=haslo]").next().show(); 
+                $("input[name=haslo]").next().html("Hasło musi zawierać conajmniej jednen znak z każdego z zakresów 0-9, a-z, A-Z");              
+                }
+                       else
+                    {
+                    $("input[name=haslo]").next().hide();
+                    }
+                  }
+                else
+                    {
+                    $("input[name=haslo]").next().hide();
+                    }
+                
+        }
+    
+function validate2pass(field)
+    {
+          if($("input[name=haslo]").val()==field) 
+              {
+                $("input[name=haslo2]").next().hide(); 
+                }
+        else
+            {
+               $("input[name=haslo2]").next().show(); 
+            }
+        
+    }
     
     
-    
-    
-    
+ function validatepesel(pesel)
+        {
+           var reg = /^[0-9]{11}$/;
+    if(reg.test(pesel) == false) 
+    {
+    $("input[name=pesel]").next().show(); 
+    }
+    else
+    {
+        var dig = (""+pesel).split("");
+        var kontrola = (1*parseInt(dig[0]) + 3*parseInt(dig[1]) + 7*parseInt(dig[2]) + 9*parseInt(dig[3]) + 1*parseInt(dig[4]) + 3*parseInt(dig[5]) + 7*parseInt(dig[6]) + 9*parseInt(dig[7]) + 1*parseInt(dig[8]) + 3*parseInt(dig[9]))%10;
+        if(kontrola==0) kontrola = 10;
+        kontrola = 10 - kontrola;
+        if(parseInt(dig[10])==kontrola)
+        $("input[name=pesel]").next().hide(); 
+        else
+            {
+    $("input[name=pesel]").next().show();   
+            }
+        }
+        }   
     
     function validate(form)
     {   
@@ -76,6 +147,7 @@ function handlerFunction() {
              return "Niewłasciwe znaki w nazwie użytkownika";
             return "";
         }
+        
         function validatepassword(field, field2)
         {
             if(field=="") return "nie wpisano hasła.\n";
@@ -139,17 +211,17 @@ function handlerFunction() {
 <h3 class="form-signin-heading"> Rejestracja nowego czytelnika</h3>
 <form method=post class="form-signin" id="rejestracja" onsubmit="return validate(this)" action="dodaj_uzytkownika.php">
 <label for="inputLogin" class="sr-only">login</label>
-        <input type="text" onblur="sprlog(this.value);"  name=login  class="form-control" placeholder="login" required autofocus>
+        <input type="text" onblur="validatelogin(this.value);"  name=login  class="form-control" placeholder="login" required autofocus>
         <div class="alert alert-danger">
 </div>
         
         <label for="inputPassword" class="sr-only" >hasło</label>
         
-        <input type="password" name=haslo class="form-control"  placeholder="hasło" required>
-        <div class="alert alert-danger">
+        <input type="password" onblur="validatepass(this.value);" name=haslo class="form-control"  placeholder="hasło" required>
+        <div class="alert alert-danger">haslo
 </div>
         <label for="inputPassword" class="sr-only">Powtórz hasło</label>
-        <input type="password" name=haslo2 class="form-control" placeholder="hasło" required>
+        <input type="password" onblur="validate2pass(this.value);" name=haslo2 class="form-control" placeholder="hasło" required>
         <div class="alert alert-danger">Hasła nie są zgodne!
 </div>
         <label for="inputImie" class="sr-only">Imie</label>
@@ -157,7 +229,9 @@ function handlerFunction() {
          <label for="inputNazwisko" class="sr-only">Nazwisko</label>
         <input type="text"  name=nazwisko class="form-control" placeholder="Nazwisko" required autofocus>
          <label for="inputpesel" class="sr-only">PESEL</label>
-        <input type="text"  name=pesel class="form-control" placeholder="PESEL" required autofocus>
+        <input type="text" onblur="validatepesel(this.value);"  name=pesel class="form-control" placeholder="PESEL" required autofocus>
+        <div class="alert alert-danger">Niepoprawny PESEL!
+</div>
         <label for="inputtelefon" class="sr-only">Telefon</label>
         <input type="text"  name=telefon class="form-control" placeholder="Telefon" required autofocus>
         <label for="inputemail" class="sr-only">email</label>

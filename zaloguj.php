@@ -9,9 +9,20 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
-
+<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/md5.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="bootstrap/js/bootstrap.min.js"></script>
+<script>
+    
+    
+  function  hash(form)
+    {
+               if(form.haslo.value=CryptoJS.MD5(form.haslo.value))
+return true;
+  else{alert("blad javascript"); return false}      
+    }
+    
+  </script>  
 </head>
 <body>
 
@@ -23,7 +34,7 @@ require_once("baza.php") ;
 if (isset($_POST['login']) && isset($_POST['haslo']))
 {
 	$login=  filter_input(INPUT_POST, 'login',FILTER_SANITIZE_STRING);
-	$haslo=  md5(filter_input(INPUT_POST, 'haslo',FILTER_SANITIZE_STRING));
+	$haslo=  filter_input(INPUT_POST, 'haslo',FILTER_SANITIZE_STRING);
     
      if($stmt = $mysqli->prepare("select count(*) as cnt, id_uzytkownika as id_u  from uzytkownik where login=? and haslo=?;"))
          {
@@ -73,7 +84,7 @@ if (isset($_POST['login']) && isset($_POST['haslo']))
     else{?>
             <div class="col-md-4 col-md-offset-4 well well-lg " >
 
-      <form method="post" class="form-signin" action="zaloguj.php">
+      <form method="post" class="form-signin" onsubmit="return hash(this)" action="zaloguj.php">
         <h2 class="form-signin-heading">Logowanie</h2>
         <label for="inputEmail" class="sr-only">login</label>
         <input type="text"  name=login class="form-control" placeholder="login" required autofocus>

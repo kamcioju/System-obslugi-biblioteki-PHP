@@ -8,19 +8,19 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="nav navbar-brand" href="#">Zamówienia</a>
+      <a class="nav navbar-brand" href="zamowienia.php">Zamówienia</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         
-        <li><a href="#">Ostatnio wyszukiwane</a></li>
+        <li><a href="ostatnio_wyszukiwane.php">Ostatnio wyszukiwane</a></li>
         
       </ul>
-      <form class="navbar-form navbar-left" role="search">
+      <form method="GET" class="navbar-form navbar-left" action="wyszukaj.php" role="search">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Wyszukaj">
+          <input type="text" class="form-control" placeholder="Wyszukaj" name=szukane>
         </div>
         
             <div class="form-group">
@@ -32,64 +32,89 @@
               </select>
             </div>
          
-        <button type="submit" class="btn btn-primary">Wyszukaj</button>
-      </form>
-        
+        <button type="submit"> Wyszukaj</button>
+      </form >
+ <?
+header("Cache-Control: no-store, no-cache, must-revalidate");  
+header("Cache-Control: post-check=0, pre-check=0, max-age=0", false);
+header("Pragma: no-cache");
+?>
+       
  
     <div class="nav navbar-nav navbar-right">    
 <?php       
 ///logowanie i wylogowywanie
-      require_once("baza.php") ;
+        //cookie
       if(isset($_COOKIE['id']))
       {
-        $l=mysqli_query($link, "select id_u from sesje where id='{$_COOKIE['id']}';")
-            or die(mysqli_error($link));
+         # echo $_COOKIE['id'];
+          /*
+        $l=mysqli_query($link, "select id_u from sesje where id='{$_COOKIE['id']}';")or die(mysqli_error($link));
 	    $l=mysqli_fetch_assoc($l);
-      
-        if(isset($l['id_u']))
-        {
-          $u=mysqli_query($link, "select login from uzytkownik where id_uzytkownika='{$l['id_u']}';")
-            or die(mysqli_error($link));
-?>
-         <ul class="nav navbar-nav">
-          <li>    
-              <a href="edycja_danych.php"> 
-              
-<?php
-           echo'zalogowany:' ;
-           $u=mysqli_fetch_assoc($u);
-           echo $u['login'];
- ?>             
-               </a>   
-           </li>  
-         </ul> 
-          <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-              role="button" aria-haspopup="true" aria-expanded="false">
-                  Moje konto<span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Wypożyczenia</a></li>
-                <li><a href="edycja_danych.php">Dane osobowe</a></li>
-                <li><a href="#">Zmiana hasła</a></li>
-                <li><a href="#">Opcje powiadomień</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="wyloguj.php">Wyloguj</a></li>
+     */
+          ///sprawdzanie sesji i ciasteczka
+         if($stmt = $mysqli->prepare("select id_u from sesje
+             where id =?;"))
+         {
+                 $stmt->bind_param('i', $_COOKIE['id']);
+                 $stmt->execute();
+                 $l=$stmt->get_result();
+                 #echo $stmt->num_rows;
+                 $l=$l->fetch_array();
+             #foreach($l as $k=>$v)
+             #{ echo $k."kutas".$v;}
+         
+                    ///sprawdzanie czy zalogowany
+                if(isset($l['id_u']))
+                {
+                    if($stmt = $mysqli->prepare("select login from uzytkownik where id_uzytkownika=?;"))
+                     {
+                     $stmt->bind_param('i', $l['id_u']);
+                     $stmt->execute();
+                     $u=$stmt->get_result();
+                     $u=$u->fetch_array(); 
+                     
+            ?>
+                     <ul class="nav navbar-nav">
+                      <li>    
+                          <a href="edycja_danych.php"> 
 
-              </ul>
-          </li>
-         </ul>
-    </div>
-<?php
-        } else{
-          //echo '<a href="zaloguj.php"><button type="button" class="btn btn-default">Zaloguj</button></a>';
-?>
-       <form class="navbar-form" role="search" action="zaloguj.php" method="POST">
-           <button type="submit" class="btn btn-default">Zaloguj</button>
-       </form>
-<?php
-        }
+            <?php
+                       echo'zalogowany:' ;
+                       echo $u['login'];
+                    }
+             ?>             
+                           </a>   
+                       </li>  
+                     </ul> 
+                      <ul class="nav navbar-nav navbar-right">
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                          role="button" aria-haspopup="true" aria-expanded="false">
+                              Moje konto<span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a href="wypozyczenia.php">Wypożyczenia</a></li>
+                            <li><a href="edycja_danych.php">Dane osobowe</a></li>
+                            <li><a href="#">Zmiana hasła</a></li>
+                            <li><a href="powiadomienia.php">Opcje powiadomień</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="wyloguj.php">Wyloguj</a></li>
+
+                          </ul>
+                      </li>
+                     </ul>
+                </div>
+        <?php
+                } else{
+                  //echo '<a href="zaloguj.php"><button type="button" class="btn btn-default">Zaloguj</button></a>';
+        ?>
+               <form class="navbar-form" role="search" action="zaloguj.php" method="POST">
+                   <button type="submit" class="btn btn-default">Zaloguj</button>
+               </form>
+        <?php
+                }
+        } 
       } else{
 ?>
                <form class="navbar-form" role="search" action="zaloguj.php" method="POST">
@@ -99,10 +124,6 @@
       }
     
 ?>
-    <style>
-        #tlo {background: #123;}      
-    </style>
-     <div id="tlo"></div>
    
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

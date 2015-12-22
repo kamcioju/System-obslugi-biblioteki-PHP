@@ -11,49 +11,91 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
-
+<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/md5.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
-
+<script src="xmlhttp.js"></script>
 <script>
+    
+    
+    var XMLHttp = getXMLHttp();
+
+    function sprlog(g){
+    XMLHttp.open("POST", "sprawdz_lohin.php");
+XMLHttp.onreadystatechange = handlerFunction;
+XMLHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+XMLHttp.send("login="+g);
+    
+    }
+function handlerFunction() {
+  if (XMLHttp.readyState == 4) {
+      if(XMLHttp.responseText.length>0)
+          //if(XMLHttp.responseText.indexOf("istnieje")>-1  )
+   { 
+       $("input[name=login]").next().show(); 
+       $("input[name=login]").next().html("Login: "+XMLHttp.responseText+" istnieje!");}
+      else {
+          $("input[name=login]").next().hide();
+      }
+  }
+}
+
+    
+    
+    
+    
+    
+    
     function validate(form)
-    {
-    fail= validatelogin(form.login.value)
-    fail+= validatepassword(form.password .value)
-    fail+= validateimie(form.imie .value)
-    fail+= validatenazwisko(form.nazwisko .value)
-    fail+= validatepesel(form.pesel .value)
-    fail+= validatetelefon(form.telefon .value)
-    fail+= validateemail(form.email .value)
-    if(fail="") return true
+    {   
+        fail="";
+        fail+= validatepassword(form.elements['haslo'].value,form.elements['haslo2'].value);
+
+    fail+= validatelogin(form.login.value);;
+    fail+= validateimie(form.imie .value);
+    fail+= validatenazwisko(form.nazwisko .value);
+    fail+= validatepesel(form.pesel .value);
+    fail+= validatetelefon(form.telefon .value);
+    fail+= validateemail(form.email .value);
+    if(fail==""){
+//$("input[name=haslohash]").val(CryptoJS.MD5($("input[name=haslo]").val()) );
+       form.haslo.value=CryptoJS.MD5(form.haslo.value);
+        //$("input[name=haslo]").val("pass2");
+        //$("input[name=haslo2]").val("pass3");
+        //form.elements['haslohash'].value="asdf";
+        return true;
+        }
     else{alert(fail); return false}
         
         
         function validatelogin(field)
         {
-            if(field=="") return "nie wpisano nazwy użytkownika.\n"
+            if(field=="") return "nie wpisano nazwy użytkownika.\n";
             else if(field.length<5)
-             return "Nazwa użytkownika musi składać się z co najmniej 5 znaków.\n"
+             return "Nazwa użytkownika musi składać się z co najmniej 5 znaków.\n";
              else if(/[^a-zA-Z0-9_-]/.test(field))
-             return "Niewłasciwe znaki w nazwie użytkownika" 
+             return "Niewłasciwe znaki w nazwie użytkownika";
+            return "";
         }
-        function validatepassword(field)
+        function validatepassword(field, field2)
         {
-            if(field=="") return "nie wpisano hasła.\n"
-                else if(field.length<6) return "hasło musi składać się z conajmniej 6 znaków.\n"
+            if(field=="") return "nie wpisano hasła.\n";
+                else if(field.length<6) return "hasło musi składać się z conajmniej 6 znaków.\n";
                 else if(!/[a-z]/.test(field)||
                         !/[A-Z]/.test(field)||
                         !/[0-9]/.test(field))
-                        return "Hasło musi zawierać conajmniej jednen znak z każdego z zakresów 0-9, a-z, A-Z.\n"
-                        return ""
+                        return "Hasło musi zawierać conajmniej jednen znak z każdego z zakresów 0-9, a-z, A-Z.\n";
+                else if(field!=field2)
+                        return"Podane hasła nie są zgodne";
+                        return "";
                 
         }
         function validateimie(field)
         {
-            return (field=="")? "nie wpisano imienia.\n":""
+            return (field=="")? "nie wpisano imienia.\n":"";
         }
         function validatenazwisko(field)
         {
-            return (field=="")? "nie wpisano nazwiska.\n":""
+            return (field=="")? "nie wpisano nazwiska.\n":"";
         }
         function validatepesel(pesel)
         {
@@ -84,8 +126,6 @@
 }
     
     
-    
-    
     </script>
 
 
@@ -97,11 +137,21 @@
 
  <div class="col-md-4 col-md-offset-4  well well-lg  " >
 <h3 class="form-signin-heading"> Rejestracja nowego czytelnika</h3>
-<form method=post class="form-signin" onsubmit="return validate(this)" action="dodaj_uzytkownika.php">
+<form method=post class="form-signin" id="rejestracja" onsubmit="return validate(this)" action="dodaj_uzytkownika.php">
 <label for="inputLogin" class="sr-only">login</label>
-        <input type="text"  name=login class="form-control" placeholder="login" required autofocus>
-        <label for="inputPassword" class="sr-only">hasło</label>
-        <input type="password" name=haslo class="form-control" placeholder="hasło" required>
+        <input type="text" onblur="sprlog(this.value);"  name=login  class="form-control" placeholder="login" required autofocus>
+        <div class="alert alert-danger">
+</div>
+        
+        <label for="inputPassword" class="sr-only" >hasło</label>
+        
+        <input type="password" name=haslo class="form-control"  placeholder="hasło" required>
+        <div class="alert alert-danger">
+</div>
+        <label for="inputPassword" class="sr-only">Powtórz hasło</label>
+        <input type="password" name=haslo2 class="form-control" placeholder="hasło" required>
+        <div class="alert alert-danger">Hasła nie są zgodne!
+</div>
         <label for="inputImie" class="sr-only">Imie</label>
         <input type="text"  name=imie class="form-control" placeholder="Imie" required autofocus>
          <label for="inputNazwisko" class="sr-only">Nazwisko</label>
@@ -111,7 +161,8 @@
         <label for="inputtelefon" class="sr-only">Telefon</label>
         <input type="text"  name=telefon class="form-control" placeholder="Telefon" required autofocus>
         <label for="inputemail" class="sr-only">email</label>
-        <input type="text"  name=email class="form-control" placeholder="email" required autofocus>
+        <input type="text" name=email class="form-control" placeholder="email"required autofocus>
+        
 
 <button class="btn btn-lg btn-primary btn-block" type="submit">Dodaj Użytkownika</button>
 

@@ -15,7 +15,63 @@
 </head>
 <body>
 
-    <div class="col-md-4 col-md-offset-4 well well-lg " >
+
+
+<?php
+require_once("baza.php") ;
+# logowanie
+if (isset($_POST['login']) && isset($_POST['haslo']))
+{
+	$login=  filter_input(INPUT_POST, 'login',FILTER_SANITIZE_STRING);
+	$haslo=  md5(filter_input(INPUT_POST, 'haslo',FILTER_SANITIZE_STRING));
+    
+     if($stmt = $mysqli->prepare("select count(*) as cnt, id_uzytkownika as id_u  from uzytkownik where login=? and haslo=?;"))
+         {
+         $stmt->bind_param('ss',$login,$haslo);
+         $stmt->execute();
+         $q=$stmt->get_result();
+         $q=$q->fetch_array();
+         
+	     if($q['cnt']) 
+         {
+             $id=md5(rand(-1000,1000).microtime());
+# dodawanie do sesji w bazie
+             if($stmt = $mysqli->prepare("insert into sesje(id_u,id,web,IP)
+                 values(?,?,?,?); "))
+                 {
+                 $stmt->bind_param('iiss', $q['id_u'],$id,$_SERVER['HTTP_USER_AGENT'],$_SERVER['REMOTE_ADDR']);
+                 $stmt->execute();
+                
+# tworzenie ciasteczka        
+                setcookie('id',$id);
+#rozpoczynanie sesji php  
+                session_start();
+                $_SESSION['id_u']=$q['id_u'];
+         
+     
+?>
+        <div class=" col-md-6 col-md-offset-3 alert alert-success">
+            <center><h2>Zalogowano!</h2></center>
+          <meta http-equiv="refresh" content="1;url=index.php">
+        </div>
+<?php
+                } 
+         }
+         
+	else {
+?>      
+        <div class="col-md-6 col-md-offset-3 alert alert-error"><center>
+            <h2>Niepoprawne dane logowania!</h2></center>
+        </div>
+       
+           
+        
+<?php
+    }}
+    
+}
+    else{?>
+            <div class="col-md-4 col-md-offset-4 well well-lg " >
 
       <form method="post" class="form-signin" action="zaloguj.php">
         <h2 class="form-signin-heading">Logowanie</h2>
@@ -31,37 +87,8 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Zaloguj</button>
       </form>
 <a href="zarejestruj.php"> rejestracja nowego uzytkownika </a>
-    </div> <!-- /container -->
-
-<?php
-require_once("baza.php") ;
-if (isset($_POST['login']))
-{
-	$_POST['login'] = mysqli_real_escape_string($link , $_POST['login']);
-	$_POST['haslo'] = md5(mysqli_real_escape_string($link , $_POST['haslo']));
-	$q=mysqli_query($link, 
-	"select count(*) as cnt, id_uzytkownika as id_u  from uzytkownik where 
-	login='{$_POST['login']}' and haslo='{$_POST['haslo']}';") or die(mysqli_error($link));
-	$q=mysqli_fetch_assoc($q);
-	if($q['cnt']) {
-	   $id=md5(rand(-1000,1000).microtime());
-	   mysqli_query($link, "insert into sesje(id_u,id,web,IP)
-       values('{$q['id_u']}', '$id', '{$_SERVER['HTTP_USER_AGENT']}',
-       '{$_SERVER['REMOTE_ADDR']}'); ") or die (mysqli_error($link));
-	   setcookie('id',$id);
-?>
-        <div class=" col-md-6 col-md-offset-3 alert alert-success">
-            <center><h2>Zalogowano!</h2></center>
-            <meta http-equiv="refresh" content="2;url=index.php">
-        </div>
-<?php
+    </div><?php 
     }
-	else {
+   
 ?>
-        <div class="col-md-6 col-md-offset-3 alert alert-error"><center>
-            <h2>Niepoprawne dane logowania!</h2></center>
-        </div>
-<?php
-    }
-}
-?>
+    

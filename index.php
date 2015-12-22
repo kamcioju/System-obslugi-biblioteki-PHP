@@ -19,8 +19,9 @@
 
 <body>
 <?php 
+    include_once "baza.php";
     include_once "nawigacja.php";
-
+    include_once "sesje.php";
 ?>
 
 <div class="container well well-sm">
@@ -30,9 +31,8 @@ Grupa „Kampinos” powstała na bazie struktur VIII Rejonu VII Obwodu „Obro�
 
 Pod koniec września 1944 Grupa „Kampinos” podjęła próbę przejścia w Góry Świętokrzyskie. Początkowo polskie zgrupowanie skutecznie wymykało się niemieckiej obławie, lecz na skutek błędów dowództwa zostało 29 września otoczone i rozbite pod Jaktorowem. Wielu żołnierzom AK, w tym kilku zwartym oddziałom, udało się jednak wyrwać z okrążenia. Część z nich kontynuowała walkę aż do stycznia 1945 roku.
 </div>
-<div class='footer'>
-      <div class='container'>
-        <p>Stopka</p>
-      </div>
-    </div>
-      </body>
+<?php
+    include_once "stopka.php";
+    ?>
+</body>
+</html>

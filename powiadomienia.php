@@ -17,19 +17,9 @@
 
 <?php 
     include_once "baza.php";
-    include_once "nawigacja.php"; 
+    include_once "nawigacja.php";
+   
 ?>
-<body>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 
 
@@ -37,5 +27,3 @@
 <?php
     include_once "stopka.php";
     ?>
-    
-</body>

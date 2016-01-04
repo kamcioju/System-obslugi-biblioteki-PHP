@@ -21,6 +21,18 @@
     include_once "baza.php";
     include_once "nawigacja.php"; 
     
+    //dodawanie rezerwacji
+      if(isset($_GET['rid'])){
+
+        
+        if($stmt = $mysqli->prepare("call rez_status(?,?)"))
+             {
+            $status="Do odbioru";
+             $stmt->bind_param('is',$_GET['rid'],$status);
+             $stmt->execute();
+             $stmt->close();
+        }
+     }
     
 ?>
 <body>
@@ -28,34 +40,21 @@
  <table class="table table-hover ">
     <thead>
       <tr>
-        <th>Tytuł</th>
-        <th>Rok Wydania</th>
-        <th>Liczba Stron</th>
-        <th>Data wypożyczenia</th>
-        <th>Planowana data zwrotu</th>
-        <th>Prolongaty</th>
-        <th> </th>
-        <th>Kara</th>
-
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>email</th>
+        <th>telefon</th>
+        <th>data rezerwacji</th>
+        <th>Tytuł książki</th>
+        <th>id egzemplarza</th>
       </tr>
     </thead>
     <tbody>   
     
 <?php
-    if(isset($_GET['wid'])){
-
-        
-        if($stmt = $mysqli->prepare("call prolonguj(?,?)"))
-             {
-             $stmt->bind_param('ii',$_SESSION['id_u'],$_GET['wid']);
-             $stmt->execute();
-             $stmt->close();
-            }
-    }
-                 
-    if($stmt = $mysqli->prepare("call wypozyczenia_user(?)"))
+      
+    if($stmt = $mysqli->prepare("select * from admin_rez"))
          {
-         $stmt->bind_param('i',$_SESSION['id_u']);
          $stmt->execute();
          $q=$stmt->get_result();
         
@@ -65,13 +64,14 @@
     {
         echo'
        <tr>
-         <td> <a href="ksiazka.php?kid='.$row[0].'">'.$row[1].'</td></button>
-         <td>'.$row[2].'</td>
+         <td>'.$row[0].'</td>
+         <td>'.$row[1].'</td>
          <td>'.$row[3].'</td>
-         <td>'.$row[4].'</td>
          <td>'.$row[5].'</td>
          <td>'.$row[6].'</td>
-         <td><form  action="wypozyczenia.php?wid='.$row[7].'" method="POST"><button type="submit" class="btn btn-info">Prolonguj</button></form></td>
+         <td>'.$row[7].'</td>
+         <td>'.$row[8].'</td>
+         <td><form  action="rezerwacje.php?rid='.$row[5].'" method="POST"><button type="submit" class="btn btn-info">Przygotowano</button></form></td>
          
       </tr></a>';
         

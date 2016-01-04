@@ -1,4 +1,13 @@
-<nav class="navbar navbar-default">
+
+<script type="text/javascript" src="http://ciasteczka.eu/cookiesEU-latest.min.js"></script>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+	jQuery.fn.cookiesEU();
+});
+
+</script>
+ <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -32,7 +41,7 @@
               </select>
             </div>
          
-        <button type="submit"> Wyszukaj</button>
+        <button type="submit" class="btn btn-default"> Wyszukaj</button>
       </form >
  <?
 header("Cache-Control: no-store, no-cache, must-revalidate");  
@@ -62,29 +71,55 @@ header("Pragma: no-cache");
                  #echo $stmt->num_rows;
                  $l=$l->fetch_array();
              #foreach($l as $k=>$v)
-             #{ echo $k."kutas".$v;}
+             #{ echo $k."kus".$v;}
          
                     ///sprawdzanie czy zalogowany
                 if(isset($l['id_u']))
                 {
-                    if($stmt = $mysqli->prepare("select login from uzytkownik where id_uzytkownika=?;"))
+                    if($stmt = $mysqli->prepare("select login, aktywacja from uzytkownik where           id_uzytkownika=?;"))
                      {
                      $stmt->bind_param('i', $l['id_u']);
                      $stmt->execute();
                      $u=$stmt->get_result();
                      $u=$u->fetch_array(); 
-                     
+                     if($u['aktywacja']==2)
+                     {
             ?>
+ <ul class="nav navbar-nav navbar-right">
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                          role="button" aria-haspopup="true" aria-expanded="false">
+                              Admin<span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a href="rezerwacje.php">Rezerwacje</a></li>
+                            <li><a href="wyszukaj_uzytkownika.php">Wyszukaj użytkownika</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="edycja_danych.php">Dane osobowe</a></li>
+                            <li><a href="zmiana_hasla.php">Zmiana hasła</a></li>
+                            <li><a href="powiadomienia.php">Opcje powiadomień</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="dodaj_ksiazke.php">Dodaj książkę</a></li>
+                            <li role="separator" class="divider"></li>
+                             <li><a href="wyloguj.php">Wyloguj</a></li>
+
+                          </ul>
+                      </li>
+                     </ul>             <?php  
+                     }     
+             ?>       
+                     
                      <ul class="nav navbar-nav">
                       <li>    
                           <a href="edycja_danych.php"> 
 
             <?php
                        echo'zalogowany:' ;
-                       echo $u['login'];
+                       echo $u['login'].'</a>';   
+
                     }
+                    if($u['aktywacja']!=2){
              ?>             
-                           </a>   
                        </li>  
                      </ul> 
                       <ul class="nav navbar-nav navbar-right">
@@ -96,7 +131,7 @@ header("Pragma: no-cache");
                           <ul class="dropdown-menu">
                             <li><a href="wypozyczenia.php">Wypożyczenia</a></li>
                             <li><a href="edycja_danych.php">Dane osobowe</a></li>
-                            <li><a href="#">Zmiana hasła</a></li>
+                            <li><a href="zmiana_hasla.php">Zmiana hasła</a></li>
                             <li><a href="powiadomienia.php">Opcje powiadomień</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="wyloguj.php">Wyloguj</a></li>
@@ -104,8 +139,11 @@ header("Pragma: no-cache");
                           </ul>
                       </li>
                      </ul>
+                     
                 </div>
         <?php
+                    }
+                
                 } else{
                   //echo '<a href="zaloguj.php"><button type="button" class="btn btn-default">Zaloguj</button></a>';
         ?>

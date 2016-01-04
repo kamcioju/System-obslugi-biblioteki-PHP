@@ -36,7 +36,7 @@ if (isset($_POST['login']) && isset($_POST['haslo']))
 	$login=  filter_input(INPUT_POST, 'login',FILTER_SANITIZE_STRING);
 	$haslo=  filter_input(INPUT_POST, 'haslo',FILTER_SANITIZE_STRING);
     
-     if($stmt = $mysqli->prepare("select count(*) as cnt, id_uzytkownika as id_u  from uzytkownik where login=? and haslo=?;"))
+     if($stmt = $mysqli->prepare("select count(*) as cnt, id_uzytkownika as id_u,aktywacja from uzytkownik where login=? and haslo=?;"))
          {
          $stmt->bind_param('ss',$login,$haslo);
          $stmt->execute();
@@ -45,7 +45,18 @@ if (isset($_POST['login']) && isset($_POST['haslo']))
          
 	     if($q['cnt']) 
          {
-             $id=md5(rand(-1000,1000).microtime());
+            if(!isset($q['aktywacja']))
+            {
+?>
+               <div class="col-md-6 col-md-offset-3 alert alert-error"><center>
+            <h2>Konto nie zostalo aktywowane!</h2></center>
+        </div>
+        <meta http-equiv="refresh" content="1;url=zaloguj.php">
+<?php
+                
+                
+            }else{
+                $id=md5(rand(-1000,1000).microtime());
 # dodawanie do sesji w bazie
              if($stmt = $mysqli->prepare("insert into sesje(id_u,id,web,IP)
                  values(?,?,?,?); "))
@@ -58,7 +69,7 @@ if (isset($_POST['login']) && isset($_POST['haslo']))
 #rozpoczynanie sesji php  
                 session_start();
                 $_SESSION['id_u']=$q['id_u'];
-         
+                $_SESSION['aktywacja']=$q['aktywacja'];
      
 ?>
         <div class=" col-md-6 col-md-offset-3 alert alert-success">
@@ -67,14 +78,14 @@ if (isset($_POST['login']) && isset($_POST['haslo']))
         </div>
 <?php
                 } 
-         }
+         }}
          
 	else {
 ?>      
-        <div class="col-md-6 col-md-offset-3 alert alert-error"><center>
+        <div class="col-md-6 col-md-offset-3 alert alert-danger"><center>
             <h2>Niepoprawne dane logowania!</h2></center>
         </div>
-       
+       <meta http-equiv="refresh" content="1;url=zaloguj.php">
            
         
 <?php

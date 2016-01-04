@@ -63,6 +63,7 @@
             $stmt2->fetch();
     $stmt2->close();
   ?>                   
+
 <?php
         while($row=$q2->fetch_array())
         {   
@@ -72,16 +73,28 @@
              '.$row[0].' 
                 '.$row[1].'<br>';
         }
-             echo'</h3></td></div></div>';
+             echo'</h3></td></div>
+             <div class="col-md-3 col-md-offset-4">
+                <form class="navbar-form" role="search" action="zamowienia.php?kid='.$_GET['kid'].'
+                                                              
+                                                                " method="POST">
+                <button type="submit" class="btn btn-primary btn-lg"> Zamów</button>
+               </form>
+        </div>'
+             
+             
+             
+             
+             
+             ;
         }
 
     
 ?>
-  
+
+        
     
-    
-    
-    
+    </div>
     </div>
     
     

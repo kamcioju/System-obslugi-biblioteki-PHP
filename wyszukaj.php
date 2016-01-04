@@ -18,6 +18,19 @@
 <?php 
     include_once "baza.php";
     include_once "nawigacja.php"; 
+    $szukane=filter_input(INPUT_GET, 'szukane',FILTER_SANITIZE_STRING);
+    if(strlen($szukane)>2)
+    {
+         session_start();
+    if(isset($_SESSION['id_u']))
+    {
+    if($stmt = $mysqli->prepare("call dodaj_wyszukanie(?,?)"))
+         {
+         $stmt->bind_param('si',$szukane,$_SESSION['id_u']);
+         $stmt->execute();
+            $stmt->close();
+        }
+    }
 ?>
 <body>
  <table class="table table-hover ">
@@ -26,8 +39,12 @@
         <th>Tytuł</th>
         <th>Rok Wydania</th>
         <th>Liczba Stron</th>
-        <th>Rezerwacja od</th>
-        <th>Rezerwacja do</th>
+        <th>Egzemplarz ID</th>
+        <th>Dostępność</th>
+         <th>Nazwa wydawnictwa</th>
+          <th>Język</th>
+          <th>Gatunki</th>
+           <th>Autorzy</th> 
       </tr>
     </thead>
     <tbody>     
@@ -35,7 +52,7 @@
     
      if($stmt = $mysqli->prepare("call ksiazka(?)"))
          {
-         $stmt->bind_param('s',$_GET['szukane']);
+         $stmt->bind_param('s',$szukane);
          $stmt->execute();
          $q=$stmt->get_result();
         
@@ -59,7 +76,14 @@
         
         
     }
+    }
+    }
+    else
+    {
         
+        
+    echo '<div class="col-md-6 col-md-offset-3 alert alert-info" style="display: block">Do wyszukania potrzebne są przynajmniej 3 znaki!
+</div>';
     }
     
     

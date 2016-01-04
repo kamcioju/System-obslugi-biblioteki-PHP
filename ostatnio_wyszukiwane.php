@@ -16,9 +16,53 @@
 </head>
 
 <?php 
+                 session_start();
+
     include_once "baza.php";
     include_once "nawigacja.php"; 
+    
+    if(isset($_SESSION['id_u']))
+    {
+        $stmt = $mysqli->prepare("call historia_wyszukan_user(?)");
+         if ( !$stmt ) {
+    printf('errno: %d, error: %s', $mysqli->errno, $mysqli->error);
+    die;}
+    else
+         {
+         $stmt->bind_param('i',$_SESSION['id_u']);
+         $stmt->execute();
+    
+         $q=$stmt->get_result();
+                 #echo $stmt->num_rows;
+        ?>
+        <table class="table table-hover ">
+    <thead>
+      <tr>
+        <th>Szukane</th>
+        <th>data</th>
+      </tr>
+    </thead>
+    <tbody> 
+        <?php
+        while($row=$q->fetch_array())
+    {
+        echo'
+       <tr>
+         <td>'.$row[1].'</td>
+         <td>'.$row[3].'</td>
+      </tr></a>';
+        
+        
+    }?>
+       </tbody>
+  </table> 
+        
+        
+     <?php   
+    }
+    }
 ?>
+
 <body>
     
     

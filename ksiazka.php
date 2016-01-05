@@ -17,13 +17,14 @@
 </head>
 
 <?php 
+       session_start();
     include_once "baza.php";
     include_once "nawigacja.php"; 
 ?>
 <body>
     <div class="container well well-sm">
     <?php
-    session_start();
+  
     if($stmt = $mysqli->prepare("call ksiazka2(?)"))
          {
          $stmt->bind_param('i',$_GET['kid']);
@@ -32,7 +33,7 @@
         $stmt->fetch();
     $stmt->close();
             echo '<div class=col-md-4><img width=400 height=500 class="img-thumbnail"   src="okladki/'.$_GET["kid"].'.jpg"></td></div>';
-        
+       $dostepnosc=0;
         while($row=$q->fetch_array())
         {
             echo'
@@ -44,8 +45,8 @@
             <b>Numer seryjny:</b> '.$row[3].'<br>
              <b>Wydawnictwo: </b>'.$row[5].'</td><br><br>
              <b>Autorzy:</b> <br>';
-
-
+            $dostepnosc=$row[4];
+            
         }
         }
     $stmt2 = $mysqli->prepare("call autorzy(?)");
@@ -73,6 +74,7 @@
              '.$row[0].' 
                 '.$row[1].'<br>';
         }
+            if($dostepnosc==1){
              echo'</h3></td></div>
              <div class="col-md-3 col-md-offset-4">
                 <form class="navbar-form" role="search" action="zamowienia.php?kid='.$_GET['kid'].'
@@ -80,13 +82,8 @@
                                                                 " method="POST">
                 <button type="submit" class="btn btn-primary btn-lg"> Zamów</button>
                </form>
-        </div>'
-             
-             
-             
-             
-             
-             ;
+        </div>';
+            }
         }
 
     
@@ -95,7 +92,7 @@
         
     
     </div>
-    </div>
+   
     
     
     

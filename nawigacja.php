@@ -97,7 +97,8 @@ header("Pragma: no-cache");
                             <li role="separator" class="divider"></li>
                             <li><a href="edycja_danych.php">Dane osobowe</a></li>
                             <li><a href="zmiana_hasla.php">Zmiana hasła</a></li>
-                            <li><a href="powiadomienia.php">Opcje powiadomień</a></li>
+                             <li><a href="wypozyczenia.php">Wypożyczenia</a></li>
+                             <li><a href="wypozyczenia_historia.php">Wypożyczenia historia</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="dodaj_ksiazke.php">Dodaj książkę</a></li>
                             <li role="separator" class="divider"></li>
@@ -115,13 +116,13 @@ header("Pragma: no-cache");
 
             <?php
                        echo'zalogowany:' ;
-                       echo $u['login'].'</a>';   
+                       echo $u['login'].'</a> </li></ul>  ';   
 
                     }
                     if($u['aktywacja']!=2){
              ?>             
-                       </li>  
-                     </ul> 
+                       
+                     
                       <ul class="nav navbar-nav navbar-right">
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown"
@@ -130,6 +131,7 @@ header("Pragma: no-cache");
                           </a>
                           <ul class="dropdown-menu">
                             <li><a href="wypozyczenia.php">Wypożyczenia</a></li>
+                            <li><a href="wypozyczenia_historia.php">Wypożyczenia historia</a></li>
                             <li><a href="edycja_danych.php">Dane osobowe</a></li>
                             <li><a href="zmiana_hasla.php">Zmiana hasła</a></li>
                             <li><a href="powiadomienia.php">Opcje powiadomień</a></li>

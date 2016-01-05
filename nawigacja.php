@@ -93,6 +93,8 @@ header("Pragma: no-cache");
                           </a>
                           <ul class="dropdown-menu">
                             <li><a href="rezerwacje.php">Rezerwacje</a></li>
+                            <li><a href="spoznienia.php">Spóźnienia</a></li>
+
                             <li><a href="wyszukaj_uzytkownika.php">Wyszukaj użytkownika</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="edycja_danych.php">Dane osobowe</a></li>
@@ -116,8 +118,10 @@ header("Pragma: no-cache");
 
             <?php
                        echo'zalogowany:' ;
-                       echo $u['login'].'</a> </li></ul>  ';   
-
+                       echo $u['login'];   
+?>
+                   </a></li></ul>
+                    <?php    
                     }
                     if($u['aktywacja']!=2){
              ?>             

@@ -34,7 +34,6 @@
         <th>Data wypożyczenia</th>
         <th>Planowana data zwrotu</th>
         <th>Prolongaty</th>
-        <th> </th>
         <th>Kara</th>
 
       </tr>
@@ -100,6 +99,7 @@
          <td>'.$row[4].'</td>
          <td>'.$row[5].'</td>
          <td>'.$row[6].'</td>
+         <td>'.$row[8].'</td>
          <td><form  action="uzytkownik.php?oddaj_w_id='.$row[7].'&uid='.$idu.'" method="POST"><button type="submit" class="btn btn-info">Oddano</button></form></td>
       </tr></a>';
         

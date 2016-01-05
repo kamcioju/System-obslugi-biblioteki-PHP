@@ -46,6 +46,12 @@
         $("#dodaj_autora").on("click",function(e){
             e.preventDefault();
             $(".autor").last().after('<div class="row autor" ><div class="col-md-4" >  <br>Imie:<input type="text" name=autorimie'+licznika+' class="form-control" required autofocus></div><div class="col-md-4" >  <br>Nazwisko:<input type="text" name=autornazwisko'+licznika+' class="form-control" required autofocus></div><div class="col-md-4" > <br>Rok urodzenia:<div class=input-group date><input type="text" name=autorrok'+licznika+' class=" form-control date data"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span> </div></div></div>');
+            $('.data').datepicker({
+    format: "yyyy",
+    startView: 2,
+    minViewMode: 2,
+    language: "pl"
+});
             licznika++;
             });
            $("#usun_autora").on("click",function(e){
@@ -53,12 +59,6 @@
                  { $(".autor").last().remove();
                  licznika--;
                  }
-               $('.data').datepicker({
-    format: "yyyy",
-    startView: 2,
-    minViewMode: 2,
-    language: "pl"
-});
            
      });
          
@@ -83,8 +83,10 @@
            )
  {               
             //sprawdzanie czy książka istnieje
-   try{     
-       $stmt = $mysqli->prepare("select egzemplarz_id from ksiazka where egzemplarz_id=?;");
+   try{
+        $mysqli->autocommit(false);  
+        $mysqli->query("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+        $stmt = $mysqli->prepare("select egzemplarz_id from ksiazka where egzemplarz_id=?;");
                if ( !$stmt ) 
                     {   
                         throw new RuntimeException($mysqli->errno." ".$mysqli->error);
@@ -185,6 +187,7 @@
                    }
                    }
                }
+            
                /*
                $stmt = $mysqli->prepare("insert into 
                 gatunek(nazwa) SELECT ? from gatunek where
@@ -383,14 +386,13 @@
         {
         $stmt->bind_param('ii',$autor,$id_ks);
         if(!$stmt->execute())
-       
         {
              throw new RuntimeException('Błąd dodawania autorów do książki.');
         }       
         }          
      
        }
-       
+      
        
        //upload plików
        {
@@ -402,13 +404,14 @@
             {
                 throw new RuntimeException('Błąd przenoszenia pliku.');
             }
-
+            $mysqli->commit();
            echo '<div class="col-md-6 col-md-offset-3 alert alert-success" style="display: block">Dodano książkę!
     </div>';
        }
       }
        catch (RuntimeException $e) 
         {
+           $mysqli->rollBack();
 
            echo '<div class="col-md-6 col-md-offset-3 alert alert-danger" style="display: block">'.
                 $e->getMessage()

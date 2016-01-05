@@ -16,12 +16,13 @@
 </head>
 
 <?php 
+      session_start();
     include_once "baza.php";
     include_once "nawigacja.php"; 
     $szukane=filter_input(INPUT_GET, 'szukane',FILTER_SANITIZE_STRING);
     if(strlen($szukane)>2)
     {
-         session_start();
+       
     if(isset($_SESSION['id_u']))
     {
     if($stmt = $mysqli->prepare("call dodaj_wyszukanie(?,?)"))

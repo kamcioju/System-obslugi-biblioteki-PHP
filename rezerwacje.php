@@ -17,7 +17,9 @@
 
 <?php 
         session_start(); 
-
+if(isset( $_SESSION['id_u']))
+    if($_SESSION['aktywacja']==2)
+    {
     include_once "baza.php";
     include_once "nawigacja.php"; 
     
@@ -86,5 +88,5 @@
 <?php
     include_once "stopka.php";
     ?>
-    
+    }
 </body>

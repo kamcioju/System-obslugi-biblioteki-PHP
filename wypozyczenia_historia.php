@@ -47,7 +47,7 @@
             $uid=$_GET['uid']; 
         
               
-    if($stmt = $mysqli->prepare("select * from wypozyczenia_hist where id_uzytkownika=?"))
+    if($stmt = $mysqli->prepare("call historia_wyp_user(?)"))
          {
        
          $stmt->bind_param('i',$uid);

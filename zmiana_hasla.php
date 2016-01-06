@@ -19,7 +19,9 @@
          session_start(); 
 
     include_once "baza.php";
-    include_once "nawigacja.php"; 
+    include_once "nawigacja.php";
+     if(isset( $_SESSION['id_u']))
+    {
 ?>
 <body>
     
@@ -182,7 +184,7 @@ return true;
 
 
 <?php
-    }
+    } }
     include_once "stopka.php";
     ?>
     

@@ -22,7 +22,10 @@
     include_once "nawigacja.php"; 
     
     //dodawanie rezerwacji
-      if(isset($_GET['rid'])){
+    if(isset($_SESSION['aktywacja']))
+    if( $_SESSION['aktywacja']==2)
+    {
+    if(isset($_GET['rid'])){
 
         
         if($stmt = $mysqli->prepare("call rez_status(?,?)"))
@@ -46,6 +49,7 @@
         <th>email</th>
         <th>dni spóźnienia</th>
         <th>kara</th>
+       
       </tr>
     </thead>
     <tbody>   
@@ -68,6 +72,7 @@
          <td>'.$row[2].'</td>
          <td>'.$row[4].'</td>
          <td>'.$row[5].'</td>
+          <td>'.$row[6].'</td>
          <td><form  action="uzytkownik.php?uid='.$row[3].'" method="POST"><button type="submit" class="btn btn-info">Uzytkownik</button></form></td>
          
       </tr></a>';
@@ -80,7 +85,7 @@
     </tbody>
   </table>    
 
-<?php
+<?php }
     include_once "stopka.php";
     ?>
     

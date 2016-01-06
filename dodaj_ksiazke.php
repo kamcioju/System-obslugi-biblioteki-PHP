@@ -26,6 +26,7 @@
 
 <body>
  <script> 
+     
      $(document).ready(function(){
         var licznikg=2;
         var licznika=2;
@@ -74,7 +75,9 @@
 <?php 
     include_once "baza.php";
     include_once "nawigacja.php";
-
+if(isset($_SESSION['aktywacja']))
+    if( $_SESSION['aktywacja']==2)
+    {
          if(isset($_POST['tytul'],$_POST['rok'],$_POST['id_egz'],
                   $_POST['l_stron'],$_POST['jezyk'],$_POST['wydawnictwo'],
                   $_POST['wydawnictwokraj'],$_POST['gatunek1'],
@@ -509,7 +512,7 @@
     
 </div>
 
-<?php
+<?php }
     include_once "stopka.php";
     ?>
 </body>

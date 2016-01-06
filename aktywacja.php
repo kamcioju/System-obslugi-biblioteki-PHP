@@ -14,6 +14,8 @@
  <?php
 
  include_once "baza.php";
+    if(isset($_GET['hash']))
+    {
  $hash=  filter_input(INPUT_GET, 'hash',FILTER_SANITIZE_STRING);
  if($stmt = $mysqli->prepare("call aktywuj(?)"))
          {
@@ -21,7 +23,7 @@
          $stmt->execute();
          $q=$stmt->get_result();
         $q=$q->fetch_array();
-     if($q==1){
+     if($q[0]==1){
         echo '<div class=" col-md-6 col-md-offset-3 alert alert-success">
             <center><h2>Konto aktywowane!</h2></center>
           <meta http-equiv="refresh" content="1;url=index.php">
@@ -33,6 +35,7 @@
         </div>'; 
      }}
 else die('prepare() failed: ' . htmlspecialchars($mysqli->error));
-
+    }
+    
 ?>
      </body> </html>

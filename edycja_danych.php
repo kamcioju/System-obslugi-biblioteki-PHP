@@ -20,7 +20,8 @@
     session_start();
     include_once "baza.php";
     include_once "nawigacja.php"; 
-        
+        if(isset($_SESSION['id_u']))
+        {
      if(isset($_POST['imie'],$_POST['nazwisko'],$_POST['telefon'],$_POST['email']))
              {
                $stmt = $mysqli->prepare("update uzytkownik set imie=?, nazwisko=?, telefon=?, email=? where id_uzytkownika=? ;");
@@ -79,7 +80,7 @@
 
 
 <?php
-         }
+         } }
     include_once "stopka.php";
     ?>
     

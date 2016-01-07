@@ -17,11 +17,12 @@
 
 <?php 
         session_start(); 
+      include_once "baza.php";
+    include_once "nawigacja.php";
 if(isset( $_SESSION['id_u']))
     if($_SESSION['aktywacja']==2)
     {
-    include_once "baza.php";
-    include_once "nawigacja.php"; 
+   
     
     //dodawanie rezerwacji
       if(isset($_GET['rid'])){
@@ -86,7 +87,7 @@ if(isset( $_SESSION['id_u']))
   </table>    
 
 <?php
-    include_once "stopka.php";
+    include_once "stopka.php"; }
     ?>
-    }
+    
 </body>

@@ -28,8 +28,7 @@
  <table class="table table-hover ">
     <thead>
       <tr>
-        <th>wyp_id</th>
-        <th>ksiazka_id</th>
+        <th>Tytuł książki</th>
         <th>data</th>
         <th>prolongaty</th>
         <th>planowana data zwrotu</th>
@@ -60,8 +59,7 @@
     {
         echo'
        <tr>
-        <td>'.$row[0].'</td>
-           <td>'.$row[1].'</td>
+           <td>'.$row[9].'</td>
          <td>'.$row[3].'</td>
          <td>'.$row[4].'</td>
          <td>'.$row[5].'</td>

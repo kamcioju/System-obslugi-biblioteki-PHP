@@ -73,6 +73,7 @@
             });
     </script>
 <?php 
+    session_start();
     include_once "baza.php";
     include_once "nawigacja.php";
 if(isset($_SESSION['aktywacja']))
